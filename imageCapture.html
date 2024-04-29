@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Capture</title>
+</head>
+<body>
+    <video id="video" width="440" height="280" autoplay style="border: 1px solid red;"></video>
+    <button id="captureButton">Capture Image</button>
+    <canvas id="canvas" width="440" height="280" style="display: none; border: 1px solid green;"></canvas>
+    <img id="capturedImage" src="" alt="Captured Image"  style="border: 1px blue;">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+            const captureButton = document.getElementById('captureButton');
+            const capturedImage = document.getElementById('capturedImage');
+
+            // Get access to the camera
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then((stream) => {
+                    video.srcObject = stream;
+                })
+                .catch((error) => {
+                    console.error('Error accessing camera:', error);
+                });
+
+            // Capture image when the button is clicked
+            captureButton.addEventListener('click', () => {
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                capturedImage.src = canvas.toDataURL('image/png');
+                capturedImage.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
