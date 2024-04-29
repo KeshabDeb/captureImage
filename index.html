@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Capture</title>
+    <title>Send Image to Telegram</title>
 </head>
 <body>
     <video id="video" width="440" height="280" autoplay style="border: 1px solid red;"></video>
-    <button id="captureButton">Capture Image</button>
+    <button id="captureButton">Capture Image and Send to Telegram</button>
     <canvas id="canvas" width="440" height="280" style="display: none; border: 1px solid green;"></canvas>
-    <img id="capturedImage" src="" alt="Captured Image"  style="border: 1px blue;">
+    <img id="capturedImage" src="" alt="Captured Image"  style="border: 1px blue; display: none;">
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -33,7 +33,42 @@
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 capturedImage.src = canvas.toDataURL('image/png');
                 capturedImage.style.display = 'block';
+
+                // Send the captured image to Telegram
+                const token = '7148086998:AAGp04gFP183RlODDJDhNG1I270xR6Er2uk';
+                const chatId = '7043350466'; // Replace with the chat ID where you want to send the file
+
+                const formData = new FormData();
+                formData.append('photo', dataURItoBlob(capturedImage.src), 'captured_image.png');
+
+                fetch(`https://api.telegram.org/bot${token}/sendPhoto?chat_id=${chatId}`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Image sent to Telegram:', data);
+                    alert('Image sent to Telegram successfully!');
+                })
+                .catch(error => {
+                    console.error('Error sending image to Telegram:', error);
+                    alert('Failed to send image to Telegram. Please try again later.');
+                });
             });
+
+            // Convert data URI to Blob
+            function dataURItoBlob(dataURI) {
+                const byteString = atob(dataURI.split(',')[1]);
+                const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+                const arrayBuffer = new ArrayBuffer(byteString.length);
+                const uint8Array = new Uint8Array(arrayBuffer);
+
+                for (let i = 0; i < byteString.length; i++) {
+                    uint8Array[i] = byteString.charCodeAt(i);
+                }
+
+                return new Blob([arrayBuffer], { type: mimeString });
+            }
         });
     </script>
 </body>
